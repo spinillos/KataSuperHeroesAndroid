@@ -16,6 +16,19 @@
 
 package com.karumi.katasuperheroes;
 
+import com.karumi.katasuperheroes.di.MainComponent;
+import com.karumi.katasuperheroes.di.MainModule;
+import com.karumi.katasuperheroes.model.SuperHero;
+import com.karumi.katasuperheroes.model.SuperHeroesRepository;
+import com.karumi.katasuperheroes.recyclerview.RecyclerViewInteraction;
+import com.karumi.katasuperheroes.ui.view.MainActivity;
+import com.karumi.katasuperheroes.ui.view.SuperHeroDetailActivity;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.contrib.RecyclerViewActions;
@@ -24,21 +37,12 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
-import com.karumi.katasuperheroes.di.MainComponent;
-import com.karumi.katasuperheroes.di.MainModule;
-import com.karumi.katasuperheroes.model.SuperHero;
-import com.karumi.katasuperheroes.model.SuperHeroesRepository;
-import com.karumi.katasuperheroes.recyclerview.RecyclerViewInteraction;
-import com.karumi.katasuperheroes.ui.view.MainActivity;
-import com.karumi.katasuperheroes.ui.view.SuperHeroDetailActivity;
-import it.cosenonjaviste.daggermock.DaggerMockRule;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
+
+import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -165,6 +169,16 @@ import static org.mockito.Mockito.when;
 
     onView(withId(R.id.recycler_view)).check(
         matches(recyclerViewHasItemCount(ANY_NUMBER_OF_SUPER_HEROES)));
+  }
+
+  @Test
+  public void noShowEmptyCaseIfThereAreSuperHeroes() {
+    //config mock to return any number of super heroes
+    givenThereAreSomeSuperHeroes(10, false);
+    //open activity
+    startActivity();
+    //verify that empty case is not showed
+    onView(withText("¯\\_(ツ)_/¯")).check(matches(not(isDisplayed())));
   }
 
   private List<SuperHero> givenThereAreSomeAvengers(int numberOfAvengers) {
