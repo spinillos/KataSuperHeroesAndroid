@@ -171,14 +171,22 @@ import static org.mockito.Mockito.when;
         matches(recyclerViewHasItemCount(ANY_NUMBER_OF_SUPER_HEROES)));
   }
 
-  @Test
-  public void noShowEmptyCaseIfThereAreSuperHeroes() {
-    //config mock to return any number of super heroes
+  //No show empty case if there are superheroes
+  @Test public void noShowEmptyCaseIfThereAreSuperHeroes() {
     givenThereAreSomeSuperHeroes(10, false);
-    //open activity
+
     startActivity();
-    //verify that empty case is not showed
+
     onView(withText("¯\\_(ツ)_/¯")).check(matches(not(isDisplayed())));
+  }
+
+  //check if we have 10 super heroes, we have 10 elements
+  @Test public void showsTheNumberOfSuperHeroes() {
+    givenThereAreSomeSuperHeroes(10);
+
+    startActivity();
+
+    onView(withId(R.id.recycler_view)).check(matches(recyclerViewHasItemCount(10)));
   }
 
   private List<SuperHero> givenThereAreSomeAvengers(int numberOfAvengers) {
