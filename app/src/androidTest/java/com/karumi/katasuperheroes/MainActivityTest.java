@@ -189,6 +189,24 @@ import static org.mockito.Mockito.when;
     onView(withId(R.id.recycler_view)).check(matches(recyclerViewHasItemCount(10)));
   }
 
+  //Show large list of superheroes
+  @Test public void showSuperHeroesNames() {
+    int numOfSuperHeroes = 1000;
+    givenThereAreSomeSuperHeroes(numOfSuperHeroes, false);
+
+    startActivity();
+
+    for (int i = 0; i < numOfSuperHeroes; i++) {
+      //Perform scroll to do all the cells visible
+      onView(withId(R.id.recycler_view)).perform(RecyclerViewActions.scrollToPosition(i));
+      //Checks only the visible views
+      onView(withText("SuperHero - " + i)).check(matches(isDisplayed()));
+    }
+
+  }
+
+  //Check if avenger has icon and name
+
   private List<SuperHero> givenThereAreSomeAvengers(int numberOfAvengers) {
     return givenThereAreSomeSuperHeroes(numberOfAvengers, true);
   }
