@@ -191,7 +191,7 @@ import static org.mockito.Mockito.when;
 
   //Show large list of superheroes
   @Test public void showSuperHeroesNames() {
-    int numOfSuperHeroes = 1000;
+    int numOfSuperHeroes = 10;
     givenThereAreSomeSuperHeroes(numOfSuperHeroes, false);
 
     startActivity();
@@ -206,6 +206,34 @@ import static org.mockito.Mockito.when;
   }
 
   //Check if avenger has icon and name
+  @Test public void checkAvengerWithIconAndName() {
+    int numOfAvengers = 10;
+    List<SuperHero> superHeroes = givenThereAreSomeAvengers(numOfAvengers);
+
+    startActivity();
+
+    RecyclerViewInteraction.<SuperHero>onRecyclerView(withId(R.id.recycler_view))
+            .withItems(superHeroes)
+            .check(new RecyclerViewInteraction.ItemViewAssertion<SuperHero>() {
+                @Override public void check(SuperHero superHero, View view, NoMatchingViewException e) {
+                    matches(hasDescendant(allOf(withId(R.id.iv_avengers_badge),
+                            withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))).check(view, e);
+                }
+            });
+  }
+
+  //Touch element, open the detail and check the titlebar
+  @Test public void showDetailViewAndCheckTitle() {
+      List<SuperHero> superHeroList = givenThereAreSomeSuperHeroes();
+
+      startActivity();
+
+      onView(withId(R.id.recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+      SuperHero superHero = superHeroList.get(0);
+      intended(hasComponent(SuperHeroDetailActivity.class.getCanonicalName()));
+      intended(hasExtra("super_hero_name_key", superHero.getName()));
+
+  }
 
   private List<SuperHero> givenThereAreSomeAvengers(int numberOfAvengers) {
     return givenThereAreSomeSuperHeroes(numberOfAvengers, true);
